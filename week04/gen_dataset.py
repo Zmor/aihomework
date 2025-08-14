@@ -1,13 +1,16 @@
 import csv
 import datetime
 import os
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, SystemMessage
 
 # 初始化LangChain的GPT-4o-mini调用
-chat = ChatOpenAI(model="gpt-4o-mini",
-                  temperature=1,
-                  max_tokens=4095)
+chat = ChatOpenAI(
+    model="gpt-3.5-turbo",
+    temperature=1,
+    openai_api_key=os.getenv("OPENAI_API_KEY"),
+    base_url="https://api.laozhang.ai/v1"
+)
 
 def generate_question_summary_pairs(content, summary):
     """
@@ -90,7 +93,7 @@ def gen_data(raw_content):
 
     # 构建消息列表并进行模型调用
     messages = [system_message, human_message]
-    ai_message = chat(messages)
+    ai_message = chat.invoke(messages)
 
     return ai_message.content
 
